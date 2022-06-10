@@ -60,10 +60,15 @@ namespace Techpork.Core.Extensions
 
         public static T ToNumber<T>(this string num) where T : struct
         {
+            Console.Write($"{num} ");
             if ((typeof(T).Name.ToLower().Contains("double")
                 || typeof(T).Name.ToLower().Contains("int"))
                 && num[0] != '-')
             {
+                if (num.Contains(',') && (typeof(T).Name.ToLower().Contains("int")))
+                {
+                    return (T)Convert.ChangeType(0, typeof(T));
+                }
                 return (T)Convert.ChangeType(num, typeof(T));
             }
             return (T)Convert.ChangeType(0, typeof(T));

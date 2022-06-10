@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -41,31 +42,33 @@ namespace Techpork.ExecuteInsertBda
             if (_foodSource == null)
             {
                 throw new ArgumentNullException("InsertFoods: food source is null");
-            }
+            }   
             using (StreamReader sr = new StreamReader(FoodCsv)) // bda_foods
             {
                 int count = 0;
                 while (!sr.EndOfStream)
                 {
                     count++;
+                    string line = sr.ReadLine();
+                    var length = File.ReadAllLines(FoodCsv).Length;
                     if (count == 1)
                     {
+                        Console.WriteLine(count);
                         continue;
                     }
-                    string line = sr.ReadLine();
-
                     string[] split = line.Split(';');
+                    Console.WriteLine(count + " " + split[0]);
 
                     foods.Add(new Food
                     {
                         NameIt = split[0],
                         NameEn = split[1],
-                        Kcals = split[2].ToNumber<int>(),
-                        Pro = split[3].ToNumber<double>(),
-                        Fats = split[4].ToNumber<double>(),
-                        Carb = split[5].ToNumber<double>(),
-                        Sugar = split[6].ToNumber<double>(),
-                        Fibers = split[7].ToNumber<double>(),
+                        Kcals = split[2].Trim().ToNumber<int>(),
+                        Pro = split[3].Trim().ToNumber<double>(),
+                        Fats = split[4].Trim().ToNumber<double>(),
+                        Carb = split[5].Trim().ToNumber<double>(),
+                        Sugar = split[6].Trim().ToNumber<double>(),
+                        Fibers = split[7].Trim().ToNumber<double>(),
                         ServingUnit = "g",
                         ServingSize = 0,
                         SourceId = _foodSource?.Id ?? 0
@@ -87,11 +90,11 @@ namespace Techpork.ExecuteInsertBda
                 while (!sr.EndOfStream)
                 {
                     count++;
+                    string line = sr.ReadLine();
                     if (count == 1)
                     {
                         continue;
                     }
-                    string line = sr.ReadLine();
 
                     string[] split = line.Split(';');
 
@@ -116,11 +119,11 @@ namespace Techpork.ExecuteInsertBda
                 while (!sr.EndOfStream)
                 {
                     count++;
+                    string line = sr.ReadLine();
                     if (count == 1)
                     {
                         continue;
                     }
-                    string line = sr.ReadLine();
 
                     string[] split = line.Split(';');
 
@@ -148,14 +151,14 @@ namespace Techpork.ExecuteInsertBda
                     while (!sr2.EndOfStream)
                     {
                         count++;
+                        string line = sr2.ReadLine();
                         if (count == 1)
                         {
                             continue;
                         }
-                        string line = sr2.ReadLine();
                         string[] split = line.Split(';');
-                        var findMicro = _context.Micronutrients.Where(s => s.Name.Equals(split[0])).FirstOrDefault();
-                        var findUm = _context.UnitMeasures.Where(s => s.Name.Equals(split[1])).FirstOrDefault();
+                        var findMicro = _context.Micronutrients.Where(s => s.Name.Equals(split[0])).AsNoTracking().FirstOrDefault();
+                        var findUm = _context.UnitMeasures.Where(s => s.Name.Equals(split[1])).AsNoTracking().FirstOrDefault();
                         if (findUm == null || findMicro == null)
                             continue;
                         umsDictionary.Add(findMicro.Id, findUm.Id);
@@ -171,10 +174,10 @@ namespace Techpork.ExecuteInsertBda
                     }
                     string line = sr.ReadLine();
                     string[] split = line.Split(';');
-                    var findFood = _context.Foods.Where(f => f.NameEn.ToLower().Equals(split[0].ToLower())).FirstOrDefault();
+                    var findFood = _context.Foods.Where(f => f.NameEn.ToLower().Equals(split[0].ToLower())).AsNoTracking().FirstOrDefault();
                     if (findFood == null)
                         continue;
-                    foreach (var m in _context.Micronutrients.ToList())
+                    foreach (var m in _context.Micronutrients.AsNoTracking().ToList())
                     {
                         fhm.Add(new FoodHasMicronutrient
                         {

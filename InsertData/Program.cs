@@ -12,7 +12,7 @@ namespace Techpork.ExecuteInsertBda
         static void Main(string[] args)
         {
             Console.WriteLine("Start");
-            string basePath = @"C:\techporkCSV";
+            string basePath = @"C:\Users\federica.scivales\Documents\tachporkCSV";
             try
             {
                 using (var context = new TechPorkContext())
@@ -45,6 +45,8 @@ namespace Techpork.ExecuteInsertBda
                     }
                     else
                     {
+                        var length = File.ReadAllLines(db.FoodCsv).Length;
+                        Console.WriteLine(length);
                         db.InsertSource();
                         db.InsertUms();
                         db.InsertFoods();
