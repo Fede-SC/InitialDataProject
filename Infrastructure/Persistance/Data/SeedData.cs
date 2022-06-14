@@ -27,7 +27,7 @@ namespace Techpork.Infrastructure.Persistance.Data
                         Birthday = new DateTime(1996, 8, 31),
                         Gender = Gender.Male,
                         Height = 166,
-                        AvatarUri = "Resources/Images/no_picture.png",
+                        Avatar = 1,
                         Visible = true
                     };
                     context.Users.Attach(user);
@@ -94,27 +94,6 @@ namespace Techpork.Infrastructure.Persistance.Data
                     context.SaveChanges();
                 }
 
-                if (!context.Pics.Any())
-                {
-                    var pic = new Pic
-                    {
-                        CheckId = context.Checks.FirstOrDefault().Id,
-                        Uri = "Resources/Images/no_picture.png"
-                    };
-                    context.Pics.Attach(pic);
-                    context.SaveChanges();
-                }
-
-                if (!context.UnitMeasures.Any())
-                {
-                    var um = new UnitMeasure
-                    {
-                        Name = "mg"
-                    };
-                    context.UnitMeasures.Attach(um);
-                    context.SaveChanges();
-                }
-
                 if (!context.FoodSources.Any())
                 {
                     var source = new FoodSource
@@ -141,42 +120,6 @@ namespace Techpork.Infrastructure.Persistance.Data
                         SourceId = context.FoodSources.FirstOrDefault().Id
                     };
                     context.Foods.Attach(food);
-                    context.SaveChanges();
-                }
-
-                if (!context.Micronutrients.Any())
-                {
-                    var micro = new Micronutrient
-                    {
-                        Name = "mic",
-                        FoodHasMicronutrients = new List<FoodHasMicronutrient>()
-                        {
-                            new FoodHasMicronutrient
-                            {
-                                FoodId = context.Foods.FirstOrDefault().Id,
-                                Quantity = 45,
-                                UnitMeasureId = context.UnitMeasures.FirstOrDefault().Id
-                            }
-                        }
-                    };
-                    context.Micronutrients.Attach(micro);
-                    context.SaveChanges();
-                }
-
-                if (!context.FoodTags.Any())
-                {
-                    var foodTags = new FoodTag
-                    {
-                        Code = 234,
-                        FoodHasTags = new List<FoodHasTag>()
-                        {
-                            new FoodHasTag
-                            {
-                                FoodId = context.Foods.FirstOrDefault().Id
-                            }
-                        }
-                    };
-                    context.FoodTags.Attach(foodTags);
                     context.SaveChanges();
                 }
 

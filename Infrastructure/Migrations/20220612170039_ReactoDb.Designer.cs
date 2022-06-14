@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Techpork.Infrastructure.Persistance.Data;
@@ -9,9 +10,10 @@ using Techpork.Infrastructure.Persistance.Data;
 namespace Techpork.Infrastructure.Migrations
 {
     [DbContext(typeof(TechPorkContext))]
-    partial class TechPorkContextModelSnapshot : ModelSnapshot
+    [Migration("20220612170039_ReactoDb")]
+    partial class ReactoDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,53 +238,27 @@ namespace Techpork.Infrastructure.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("author_id");
 
-                    b.Property<int>("Calcium")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("calcium");
-
                     b.Property<double>("Carb")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("double precision")
-                        .HasDefaultValue(0.0)
                         .HasColumnName("carb");
 
-                    b.Property<int>("Dha")
+                    b.Property<bool>("Deleted")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("dha");
-
-                    b.Property<int>("Epa")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("epa");
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("deleted");
 
                     b.Property<double>("Fats")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("double precision")
-                        .HasDefaultValue(0.0)
                         .HasColumnName("fats");
 
                     b.Property<double>("Fibers")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("double precision")
-                        .HasDefaultValue(0.0)
                         .HasColumnName("fibers");
 
                     b.Property<int>("Kcals")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasDefaultValue(0)
                         .HasColumnName("kcals");
-
-                    b.Property<int>("Magnesium")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("magnesium");
 
                     b.Property<string>("NameEn")
                         .HasColumnType("text")
@@ -292,16 +268,8 @@ namespace Techpork.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name_it");
 
-                    b.Property<int>("Potassium")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("potassium");
-
                     b.Property<double>("Pro")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("double precision")
-                        .HasDefaultValue(0.0)
                         .HasColumnName("pro");
 
                     b.Property<int>("ServingSize")
@@ -312,57 +280,13 @@ namespace Techpork.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("serving_unit");
 
-                    b.Property<int>("Sodium")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("sodium");
-
                     b.Property<long>("SourceId")
                         .HasColumnType("bigint")
                         .HasColumnName("source_id");
 
                     b.Property<double>("Sugar")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("double precision")
-                        .HasDefaultValue(0.0)
                         .HasColumnName("sugar");
-
-                    b.Property<int>("VitaminA")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("vitamin_a");
-
-                    b.Property<int>("VitaminB12")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("vitamin_b12");
-
-                    b.Property<int>("VitaminC")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("vitamin_c");
-
-                    b.Property<int>("VitaminD")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("vitamin_d");
-
-                    b.Property<int>("VitaminE")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("vitamin_e");
-
-                    b.Property<int>("Zinc")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("zinc");
 
                     b.HasKey("Id")
                         .HasName("pk_foods");
@@ -380,6 +304,36 @@ namespace Techpork.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("foods");
+                });
+
+            modelBuilder.Entity("Techpork.Core.Entities.FoodHasMicronutrient", b =>
+                {
+                    b.Property<long>("FoodId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("food_id");
+
+                    b.Property<long>("MicronutrientId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("micronutrient_id");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
+
+                    b.Property<long>("UnitMeasureId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("unit_measure_id");
+
+                    b.HasKey("FoodId", "MicronutrientId")
+                        .HasName("pk_food_has_micronutrients");
+
+                    b.HasIndex("MicronutrientId")
+                        .HasDatabaseName("ix_food_has_micronutrients_micronutrient_id");
+
+                    b.HasIndex("UnitMeasureId")
+                        .HasDatabaseName("ix_food_has_micronutrients_unit_measure_id");
+
+                    b.ToTable("food_has_micronutrients");
                 });
 
             modelBuilder.Entity("Techpork.Core.Entities.FoodSource", b =>
@@ -432,6 +386,35 @@ namespace Techpork.Infrastructure.Migrations
                         .HasDatabaseName("ix_meals_diet_day_id");
 
                     b.ToTable("meals");
+                });
+
+            modelBuilder.Entity("Techpork.Core.Entities.Micronutrient", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
+
+                    b.Property<long?>("FatherId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("father_id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_micronutrients");
+
+                    b.HasIndex("FatherId")
+                        .HasDatabaseName("ix_micronutrients_father_id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("micronutrients");
                 });
 
             modelBuilder.Entity("Techpork.Core.Entities.PendingFollowRequest", b =>
@@ -494,6 +477,28 @@ namespace Techpork.Infrastructure.Migrations
                         .HasDatabaseName("ix_portions_meal_id");
 
                     b.ToTable("portions");
+                });
+
+            modelBuilder.Entity("Techpork.Core.Entities.UnitMeasure", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_unit_measures");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("unit_measures");
                 });
 
             modelBuilder.Entity("Techpork.Core.Entities.User", b =>
@@ -671,6 +676,36 @@ namespace Techpork.Infrastructure.Migrations
                     b.Navigation("Source");
                 });
 
+            modelBuilder.Entity("Techpork.Core.Entities.FoodHasMicronutrient", b =>
+                {
+                    b.HasOne("Techpork.Core.Entities.Food", "Food")
+                        .WithMany("FoodHasMicronutrients")
+                        .HasForeignKey("FoodId")
+                        .HasConstraintName("fk_food_has_micronutrients_foods_food_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Techpork.Core.Entities.Micronutrient", "Micronutrient")
+                        .WithMany("FoodHasMicronutrients")
+                        .HasForeignKey("MicronutrientId")
+                        .HasConstraintName("fk_food_has_micronutrients_micronutrients_micronutrient_id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Techpork.Core.Entities.UnitMeasure", "UnitMeasure")
+                        .WithMany("FoodHasMicronutrients")
+                        .HasForeignKey("UnitMeasureId")
+                        .HasConstraintName("fk_food_has_micronutrients_unit_measures_unit_measure_id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Food");
+
+                    b.Navigation("Micronutrient");
+
+                    b.Navigation("UnitMeasure");
+                });
+
             modelBuilder.Entity("Techpork.Core.Entities.Meal", b =>
                 {
                     b.HasOne("Techpork.Core.Entities.DietDay", "DietDay")
@@ -681,6 +716,17 @@ namespace Techpork.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("DietDay");
+                });
+
+            modelBuilder.Entity("Techpork.Core.Entities.Micronutrient", b =>
+                {
+                    b.HasOne("Techpork.Core.Entities.Micronutrient", "Father")
+                        .WithMany("Children")
+                        .HasForeignKey("FatherId")
+                        .HasConstraintName("fk_micronutrients_micronutrients_father_id")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Father");
                 });
 
             modelBuilder.Entity("Techpork.Core.Entities.PendingFollowRequest", b =>
@@ -762,6 +808,8 @@ namespace Techpork.Infrastructure.Migrations
 
             modelBuilder.Entity("Techpork.Core.Entities.Food", b =>
                 {
+                    b.Navigation("FoodHasMicronutrients");
+
                     b.Navigation("Portions");
                 });
 
@@ -773,6 +821,18 @@ namespace Techpork.Infrastructure.Migrations
             modelBuilder.Entity("Techpork.Core.Entities.Meal", b =>
                 {
                     b.Navigation("Portions");
+                });
+
+            modelBuilder.Entity("Techpork.Core.Entities.Micronutrient", b =>
+                {
+                    b.Navigation("Children");
+
+                    b.Navigation("FoodHasMicronutrients");
+                });
+
+            modelBuilder.Entity("Techpork.Core.Entities.UnitMeasure", b =>
+                {
+                    b.Navigation("FoodHasMicronutrients");
                 });
 
             modelBuilder.Entity("Techpork.Core.Entities.User", b =>

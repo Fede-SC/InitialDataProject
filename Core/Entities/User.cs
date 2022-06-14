@@ -25,7 +25,7 @@ namespace Techpork.Core.Entities
         public long? NutritionistId { get; set; } // Foreign Key
         public DateTime? Birthday { get; set; } // Date
         public Gender? Gender { get; set; }
-        public string AvatarUri { get; set; }
+        public int Avatar { get; set; }
         [Range(0, 300)]
         public int? Height { get; set; }
         [Required]

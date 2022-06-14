@@ -1,10 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Techpork.Core.Entities;
 using Techpork.Core.Extensions;
 using Techpork.Infrastructure.Persistance.Data;
@@ -69,6 +66,18 @@ namespace Techpork.ExecuteInsertBda
                         Carb = split[5].Trim().ToNumber<double>(),
                         Sugar = split[6].Trim().ToNumber<double>(),
                         Fibers = split[7].Trim().ToNumber<double>(),
+                        Sodium = split[8].Trim().ToNumber<int>(),
+                        Potassium = split[9].Trim().ToNumber<int>(),
+                        VitaminA = split[10].Trim().ToNumber<int>(),
+                        VitaminB12 = split[11].Trim().ToNumber<int>(),
+                        VitaminC = split[12].Trim().ToNumber<int>(),
+                        VitaminD = split[13].Trim().ToNumber<int>(),
+                        VitaminE = split[14].Trim().ToNumber<int>(),
+                        Calcium = split[15].Trim().ToNumber<int>(),
+                        Zinc = split[16].Trim().ToNumber<int>(),
+                        Magnesium = split[17].Trim().ToNumber<int>(),
+                        Epa = split[18].Trim().ToNumber<int>(),
+                        Dha = split[19].Trim().ToNumber<int>(),
                         ServingUnit = "g",
                         ServingSize = 0,
                         SourceId = _foodSource?.Id ?? 0
@@ -78,120 +87,6 @@ namespace Techpork.ExecuteInsertBda
                 sr.Close();
             }
             _context.AddRange(foods);
-            _context.SaveChanges();
-        }
-
-        public void InsertMicronutrients()
-        {
-            List<Micronutrient> micro = new List<Micronutrient>();
-            using (StreamReader sr = new StreamReader(MicronutrientsCsv)) // bda_micronutrients
-            {
-                int count = 0;
-                while (!sr.EndOfStream)
-                {
-                    count++;
-                    string line = sr.ReadLine();
-                    if (count == 1)
-                    {
-                        continue;
-                    }
-
-                    string[] split = line.Split(';');
-
-                    micro.Add(new Micronutrient
-                    {
-                        Name = split[0]
-                    });
-                }
-
-                sr.Close();
-            }
-            _context.AddRange(micro);
-            _context.SaveChanges();
-        }
-
-        public void InsertUms()
-        {
-            List<UnitMeasure> ums = new List<UnitMeasure>();
-            using (StreamReader sr = new StreamReader(UmCsv)) // um
-            {
-                int count = 0;
-                while (!sr.EndOfStream)
-                {
-                    count++;
-                    string line = sr.ReadLine();
-                    if (count == 1)
-                    {
-                        continue;
-                    }
-
-                    string[] split = line.Split(';');
-
-                    ums.Add(new UnitMeasure
-                    {
-                        Name = split[0]
-                    });
-                }
-
-                sr.Close();
-            }
-            _context.AddRange(ums);
-            _context.SaveChanges();
-        }
-
-        public void InsertFoodsWithMicronutrients()
-        {
-            List<FoodHasMicronutrient> fhm = new List<FoodHasMicronutrient>();
-            var umsDictionary = new Dictionary<long, long>();
-            using (StreamReader sr = new StreamReader(FoodWithMicronutrientsCsv)) // food_whth_micronutrients
-            {
-                int count = 0;
-                using (StreamReader sr2 = new StreamReader(MicronutrientsWithUmCsv)) // bda_micronutrients_with_um
-                {
-                    while (!sr2.EndOfStream)
-                    {
-                        count++;
-                        string line = sr2.ReadLine();
-                        if (count == 1)
-                        {
-                            continue;
-                        }
-                        string[] split = line.Split(';');
-                        var findMicro = _context.Micronutrients.Where(s => s.Name.Equals(split[0])).AsNoTracking().FirstOrDefault();
-                        var findUm = _context.UnitMeasures.Where(s => s.Name.Equals(split[1])).AsNoTracking().FirstOrDefault();
-                        if (findUm == null || findMicro == null)
-                            continue;
-                        umsDictionary.Add(findMicro.Id, findUm.Id);
-                    }
-                } 
-                count = 0;
-                while (!sr.EndOfStream)
-                {
-                    count++;
-                    if (count == 1)
-                    {
-                        continue;
-                    }
-                    string line = sr.ReadLine();
-                    string[] split = line.Split(';');
-                    var findFood = _context.Foods.Where(f => f.NameEn.ToLower().Equals(split[0].ToLower())).AsNoTracking().FirstOrDefault();
-                    if (findFood == null)
-                        continue;
-                    foreach (var m in _context.Micronutrients.AsNoTracking().ToList())
-                    {
-                        fhm.Add(new FoodHasMicronutrient
-                        {
-                            FoodId = findFood.Id,
-                            MicronutrientId = m.Id,
-                            Quantity = split[m.Id].ToNumber<int>(),
-                            UnitMeasureId = umsDictionary[m.Id]
-                        });
-                    }
-                }
-
-                sr.Close();
-            }
-            _context.AddRange(fhm);
             _context.SaveChanges();
         }
     }

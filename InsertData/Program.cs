@@ -27,31 +27,12 @@ namespace Techpork.ExecuteInsertBda
                     {
                         Console.WriteLine("Path not fount: bda_foods.csv");
                     }
-                    else if (!File.Exists(db.MicronutrientsCsv))
-                    {
-                        Console.WriteLine("Path not fount: bda_micronutrients.csv");
-                    }
-                    else if (!File.Exists(db.MicronutrientsWithUmCsv))
-                    {
-                        Console.WriteLine("Path not fount: bda_micronutrients_with_um.csv");
-                    }
-                    else if (!File.Exists(db.FoodWithMicronutrientsCsv))
-                    {
-                        Console.WriteLine("Path not fount: food_with_micronutrients.csv");
-                    }
-                    else if (!File.Exists(db.UmCsv))
-                    {
-                        Console.WriteLine("Path not fount: um.csv");
-                    }
                     else
                     {
                         var length = File.ReadAllLines(db.FoodCsv).Length;
                         Console.WriteLine(length);
                         db.InsertSource();
-                        db.InsertUms();
                         db.InsertFoods();
-                        db.InsertMicronutrients();
-                        db.InsertFoodsWithMicronutrients();
                         Console.WriteLine("Successful execution");
                     }
                 }

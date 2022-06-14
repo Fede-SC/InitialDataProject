@@ -21,8 +21,6 @@ namespace Techpork.Core.Entities
 
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
-
-        public virtual ICollection<Pic> Pics { get; set; }
         public virtual ICollection<ChecksHasCircumference> ChecksHasCircumferences { get; set; }
     }
 }

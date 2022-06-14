@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Techpork.Infrastructure.Persistance.Data;
@@ -9,9 +10,10 @@ using Techpork.Infrastructure.Persistance.Data;
 namespace Techpork.Infrastructure.Migrations
 {
     [DbContext(typeof(TechPorkContext))]
-    partial class TechPorkContextModelSnapshot : ModelSnapshot
+    [Migration("20220614195108_AlterFoods")]
+    partial class AlterFoods
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -34,7 +34,7 @@ namespace Techpork.Infrastructure.Services
             User user = new User
             {
                 Email = email,
-                AvatarUri = "Resources/Images/no_picture.png",
+                Avatar = 1,
                 Visible = true
             };
 
